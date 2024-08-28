@@ -11,9 +11,9 @@
         "phpunit/phpunit": "^9.5"
     },
     "autoload": {
-        "psr-4": { "e2221\\Bitwarden\\" : "src/" }
+        "psr-4": { "Jalismrs\\Bitwarden\\" : "src/" }
     },
     "autoload-dev": {
-        "psr-4": { "e2221\\Bitwarden\\Tests\\" : "tests/" }
+        "psr-4": { "Jalismrs\\Bitwarden\\Tests\\" : "tests/" }
     }
 }
