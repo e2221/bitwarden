@@ -3,6 +3,7 @@
 namespace Jalismrs\Bitwarden;
 
 use Jalismrs\Bitwarden\Enum\TypeEnum;
+use Jalismrs\Bitwarden\Exception\AuthenticationException;
 use Jalismrs\Bitwarden\Model\BitwardenCollection;
 use Jalismrs\Bitwarden\Model\BitwardenFolder;
 use Jalismrs\Bitwarden\Model\BitwardenItem;
@@ -94,6 +95,17 @@ class BitwardenService
 			TypeEnum::folders => BitwardenFolder::arrayFromJson($output)[0],
 			TypeEnum::organizations => BitwardenOrganization::arrayFromJson($output)[0],
 		};
+	}
+
+	public function login(): bool
+	{
+		try {
+			$this->getSession();
+		} catch (ProcessFailedException) {
+			throw new AuthenticationException('Can not authenticate. Invalid email or password');
+		}
+
+		return true;
 	}
 
 	private function countItemsInJson(string $json): int
