@@ -97,6 +97,10 @@ class BitwardenService
 		};
 	}
 
+	/**
+	 * @throws AuthenticationException
+	 * @throws JsonException
+	 */
 	public function login(): bool
 	{
 		try {
@@ -110,7 +114,13 @@ class BitwardenService
 
 	private function countItemsInJson(string $json): int
 	{
-		return count(json_decode($json, true));
+		try {
+			$data = json_decode($json, true, 512, JSON_THROW_ON_ERROR);
+
+			return count($data);
+		} catch (JsonException) {
+			return 0;
+		}
 	}
 
     /**
