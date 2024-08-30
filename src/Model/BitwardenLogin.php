@@ -13,6 +13,7 @@ class BitwardenLogin
         private ?string $password,
         private ?string $topt,
         private ?DateTime $passwordRevisionDate,
+	    private array $uris = [],
     ) {}
 
     /**
@@ -20,11 +21,19 @@ class BitwardenLogin
      */
     public static function fromArray(array $data): BitwardenLogin
     {
+		$uris = [];
+		if(isset($data['uris']) && is_array($data['uris'])) {
+			foreach($data['uris'] as $uri) {
+				$uris[] = $uri['uri'];
+			}
+		}
+
         return new BitwardenLogin(
             $data['username'] ?? null,
             $data['password'] ?? null,
             $data['topt'] ?? null,
             isset($data['passwordRevisionDate']) ? new DateTime($data['passwordRevisionDate']) : null,
+	        $uris,
         );
     }
 
@@ -57,4 +66,9 @@ class BitwardenLogin
     {
         return $this->passwordRevisionDate;
     }
+
+	public function getUris(): array
+	{
+		return $this->uris;
+	}
 }
