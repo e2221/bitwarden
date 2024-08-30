@@ -21,12 +21,14 @@ class BitwardenService
         private BitwardenServiceDelegate $delegate,
     ) {}
 
-    /**
-     * @return BitwardenItem[]
-     * @throws JsonException
-     */
+	/**
+	 * @return BitwardenItem[]
+	 * @throws JsonException
+	 * @throws AuthenticationException
+	 */
     public function searchItems(string $search): array
     {
+		$this->login();
         $session = $this->getSession();
         $output = $this->execCommand(BitwardenCommands::SEARCH_ITEMS_COMMAND(
             $session,
@@ -43,13 +45,14 @@ class BitwardenService
 
 	/**
 	 * @return BitwardenObject[]
-	 * @throws JsonException
+	 * @throws JsonException|AuthenticationException
 	 */
 	public function searchItemsByType(
 		TypeEnum|string $type,
 		string|null $search = null,
 		SearchOptions|null $options = null,
 	): array {
+		$this->login();
 		$session = $this->getSession();
 
 		$output = $this->execCommand(BitwardenCommands::SEARCH_LIST_COMMAND(
@@ -73,10 +76,11 @@ class BitwardenService
 	}
 
 	/**
-	 * @throws JsonException
+	 * @throws JsonException|AuthenticationException
 	 */
 	public function getItemById(string $id, TypeEnum $type = TypeEnum::items): BitwardenObject|null
 	{
+		$this->login();
 		$session = $this->getSession();
 
 		$output = $this->execCommand(BitwardenCommands::GET_ITEM_COMMAND(
