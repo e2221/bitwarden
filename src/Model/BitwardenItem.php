@@ -7,7 +7,7 @@ use Exception;
 use JsonException;
 use RuntimeException;
 
-class BitwardenItem
+class BitwardenItem extends AbstractObject
 {
     private function __construct(
         private string $object,
@@ -37,32 +37,6 @@ class BitwardenItem
             $data['collectionIds'] ?? [],
             isset($data['revisionDate']) ? new DateTime($data['revisionDate']) : null,
         );
-    }
-
-    /**
-     * @throws JsonException
-     * @throws Exception
-     */
-    public static function fromJson(string $json): BitwardenItem
-    {
-        $data = json_decode($json, true, $depth=512, JSON_THROW_ON_ERROR);
-        return self::fromArray($data);
-    }
-
-    /**
-     * @return BitwardenItem[]
-     * @throws JsonException
-     * @throws Exception
-     */
-    public static function arrayFromJson(string $json): array
-    {
-        $data = json_decode($json, true, $depth=512, JSON_THROW_ON_ERROR);
-
-        if (array_keys($data) !== range(0, count($data) - 1)) {
-            throw new RuntimeException('Given array is not sequential');
-        }
-
-        return array_map(fn ($it) => self::fromArray($it), $data);
     }
 
     public function getObject(): string
